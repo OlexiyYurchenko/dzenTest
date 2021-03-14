@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<title>Резюме</title>
+	<link rel="stylesheet" href="https://necolas.github.io/normalize.css/5.0.0/normalize.css">
+	{{ form.media }}
+	<link rel="stylesheet" type="text/css" href="{% static 'articles/css.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'articles/colorbox.css' %}">
+	
+	
+
+
+</head>
+<body>
+	<div class="wrapper">
+	
+		<header class="header">
+			<div class="container">
+				<span>Home</span>
+				<div class="sort">
+					<div class="sort-btn btn btn_blue">Sort</div>
+					<div class="sort-drop">
+						<a {% if sort == "user_name" %} class="active" {% endif %}  href="?sort=user_name">User Name</a>
+						<a {% if sort == "email" %} class="active" {% endif %} href="?sort=email">E-mail</a>
+						<a {% if sort == "created_at" %} class="active" {% endif %} href="?sort=created_at">Date</a>
+					</div>
+					<a href="?sort={{sort}}&sort2={% if sort2 == 'desc' %}asc{% else %}desc{% endif %}" class="btn sort2 btn_blue {{sort2}}" ></a> 
+				</div>
+			</div>
+		</header>
+
+		<main class="main">
+			<div class="container">
+				{% block main %}
+				
+				{% endblock main %}
+			</div>
+		</main>
+		<footer class="footer">
+			<div class="container">
+				<a href="https://warm-woodland-24565.herokuapp.com/" target="_blank">Pet Project</a>
+			</div>
+		</footer>	
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="{% static 'articles/jquery.colorbox.js' %}"></script>
+		<script src="{% static 'articles/custom.js' %}"></script>
+
+	</div>
+</body>

@@ -1,0 +1,86 @@
+{% extends 'articles/base.html' %}
+{% load mptt_tags %}
+
+{% block main %}
+
+
+
+    <div>
+        {% recursetree comments %}
+            <div class="comment">
+                <div class="comment__head">
+                    <span class="user-name">{{ node.user_name }}</span>
+                    <time class="comment-date-time">{{ node.created_at|date:'Y-m-d H:i' }}</time>
+                </div>
+                <div class="comment__message">
+                    {{ node.text|safe }}
+
+                    
+                    <a class="iframe" data-title="{{ node.img }}" href="/articles/static/media/{{ node.img }}">{{ node.img }}</a>
+                    
+
+                </div>
+                
+                {% if not node.is_leaf_node %}
+                    <div class="children">
+                        {{ children }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="comment__footer comment__footer-link" data-parent="{{ node.id }}">Reply</div>
+            <div class="comment-form-holder form-reply" data-open="{{ node.id }}">
+                <form action="" method="post" novalidate>
+                    <div class="generic-error error"></div>
+                    {% csrf_token %}
+                    <input type="hidden" name="parent" value="{{ node.id }}">
+                    {% for field in form %}
+                        <p> 
+                            {{ field.label_tag }} {{ field }}
+                            {% if field.name == "captcha" %}
+                                <button class='js-captcha-refresh btn js-btn_preview'>Refresh</button>
+                            {% endif %}
+                        </p>
+                    {% endfor %}
+                    <div class="form__buttons">
+                        <button type="button" name="preview" class="btn js-btn_preview">Preview</button>
+                        <input class="submit btn btn_blue" type="submit" value="Submit">
+                    </div>
+                </form>
+            </div>
+        {% endrecursetree %}
+    </div>
+    <div class="comment-form-holder">
+        <form action="" method="post" novalidate enctype="multipart/form-data">
+            <div class="generic-error error"></div>
+            {% csrf_token %}
+            {% for field in form %}
+                <p> 
+                    {{ field.label_tag }} {{ field }}
+                    {% if field.name == "captcha" %}
+                        <button class='js-captcha-refresh btn js-btn_preview'>Refresh</button>
+                    {% endif %}
+                </p>
+            {% endfor %}
+            <div class="form__buttons">
+                <button type="button" name="preview" class="btn js-btn_preview">Preview</button>
+                <input class="submit btn btn_blue" type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+    
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a class="btn" href="?page=1&sort={{sort}}&sort2={{sort2}}">&laquo; first</a>
+            <a class="btn" href="?page={{ page_obj.previous_page_number }}&sort={{sort}}&sort2={{sort2}}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a class="btn" href="?page={{ page_obj.next_page_number }}&sort={{sort}}&sort2={{sort2}}">next</a>
+            <a class="btn" href="?page={{ page_obj.paginator.num_pages }}&sort={{sort}}&sort2={{sort2}}">last &raquo;</a>
+        {% endif %}
+    </div>
+{% endblock main %}
